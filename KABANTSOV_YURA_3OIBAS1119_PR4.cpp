@@ -236,6 +236,15 @@ void polebBoxMain()
             charCode++;
         }
     }
+    /*Цикл выводит заполненную таблицу 6х6*/
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            cout << box[i][j] << " ";
+        }
+        cout << endl;
+    }
     /*Цикл ище для каждого символа сообщения позицию строки и столбца, которые являются символом шифра*/
     for (auto& l : message)
     {
@@ -278,51 +287,52 @@ void codeOmofonMain()
     cin.ignore();
     string text;
     getline(cin, text);
-    /*Создал таблицу 6х6*/
-    unsigned char box[31][3];
+    /*Создал массив букв русского алфавита*/
+    unsigned char ABC[31];
+    /*Создал таблицу 31х2 с омофонами для каждой буквы*/
+    int omofonABC[31][2];
     /*Преообразовал каждый символ сообщения в unsigned char*/
     list<unsigned char> message = getUnsignedCharList(text);
     /*Зашифрованное сообщение*/
     string res;
     /*Переменная хранит аски код буквы "А"*/
     int charCode = 192;
-    /*Цикл заполняет таблицу 6х6 буквами русского алфавита*/
+    /*Цикл заполняет массив буквами русского алфавита*/
     for (int i = 0; i < 31; i++)
     {
-        if (charCode < 224)
-        {
-            box[i][0] = charCode;
-        }
-        {
-            box[i][0] = 0;
-        }
-        for (int j = 1; j < 3; j++)
-        {
-            box[i][j] = charCode;
-            if (charCode < 224)
-            {
-                box[i][j] = charCode;
-            }
-            else
-            {
-                box[i][j] = 0;
-            }
-            charCode++;
-        }
+        ABC[i] = charCode;
+        charCode++;
     }
-    /*Цикл ище для каждого символа сообщения позицию строки и столбца, которые являются символом шифра*/
+
+    /*Цикл заполняет таблицу омофонами*/
+    for (int i = 0; i < 31; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            omofonABC[i][j] = rand() % 200 + 100;
+        }
+        charCode++;
+    }
+    /*Цикл выводит список букв русского алфавита и соответствующие им строки таблицы с омофонами*/
+    for (int i = 0; i < 31; i++)
+    {
+        cout << static_cast<unsigned char>(ABC[i]) << " ";
+        for (int j = 0; j < 2; j++)
+        {
+            cout << omofonABC[i][j] << " ";
+        }
+        cout << endl;
+    }
+    /*Цикл ищет в списке шифруемый символ и подбирает случайный омофон*/
     for (auto& l : message)
     {
         bool flag = false;
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 31; i++)
         {
-            for (int j = 0; j < 6; j++)
+            if (l == ABC[i])
             {
-                if (l == box[i][j])
-                {
-                    res += to_string(i + 1) + to_string(j + 1) + " ";
-                    flag = true;
-                }
+                flag = true;
+                res += to_string(omofonABC[i][rand() % 2 + 0]) + " ";
             }
         }
         /*Проверка, прошёл ли символ шифрофку*/
@@ -336,6 +346,90 @@ void codeOmofonMain()
     cout << res;
 }
 
+void codeVishenerMain()
+{
+    cout << "Введите сообщение:" << endl;
+    cin.ignore();
+    string text;
+    getline(cin, text);
+    cout << "Введите ключ:" << endl;
+    string key;
+    getline(cin, key);
+    /*Создал динамический таблицу 32хkey.size() + 1*/
+    unsigned char **tableV = new unsigned char*[33];
+    for (int i = 0; i < 33; i++)
+    {
+        tableV[i] = new unsigned char[key.size() + 1];
+    }
+    /*Преообразовал каждый символ сообщения в unsigned char*/
+    list<unsigned char> message = getUnsignedCharList(text);
+    list<unsigned char> parol = getUnsignedCharList(key);
+    /*Зашифрованное сообщение*/
+    string res;
+    /*Переменная хранит аски код буквы "А"*/
+    int charCode = 192;
+    /*Цикл заполняет нулевую массив буквами русского алфавита*/
+    for (int i = 1; i < 33; i++)
+    {
+        tableV[0][i] = charCode;
+        charCode++;
+    }
+    for (int i = 1; i < key.size() + 1; i++)
+    {
+        tableV[i][0] = static_cast<unsigned char>(key[i - 1]);
+    }
+    /**/
+    for (int i = 0; i < key.size() + 1; i++)
+    {
+        for (int j = 0; j < 33; j++)
+        {
+            cout << tableV[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    ///*Цикл заполняет таблицу омофонами*/
+    //for (int i = 0; i < 31; i++)
+    //{
+    //    for (int j = 0; j < 2; j++)
+    //    {
+    //        omofonABC[i][j] = rand() % 200 + 100;
+    //    }
+    //    charCode++;
+    //}
+    ///*Цикл выводит список букв русского алфавита и соответствующие им строки таблицы с омофонами*/
+    //for (int i = 0; i < 31; i++)
+    //{
+    //    cout << static_cast<unsigned char>(ABC[i]) << " ";
+    //    for (int j = 0; j < 2; j++)
+    //    {
+    //        cout << omofonABC[i][j] << " ";
+    //    }
+    //    cout << endl;
+    //}
+    ///*Цикл ищет в списке шифруемый символ и подбирает случайный омофон*/
+    //for (auto& l : message)
+    //{
+    //    bool flag = false;
+    //    for (int i = 0; i < 31; i++)
+    //    {
+    //        if (l == ABC[i])
+    //        {
+    //            flag = true;
+    //            res += to_string(omofonABC[i][rand() % 2 + 0]) + " ";
+    //        }
+    //    }
+    //    /*Проверка, прошёл ли символ шифрофку*/
+    //    if (flag == false)
+    //    {
+    //        res += l;
+    //        res += " ";
+    //    }
+    //}
+    ///*Вывод зашифрованного сообщения*/
+    //cout << res;
+}
+
 int main()
 {
     //Команды для корректного отображения русских символов
@@ -345,7 +439,7 @@ int main()
 
     int ans;
 
-    cout << "Выберите нужный шифр. \n\nШифр Цезаря [1]\nЛозунговый шифр [2]\nПолибианский квадрат [3]\nШифрующая система Трисемуса [4]\nШифра Playfair [5]\nСистема омофонов [6]\nШифр Виженера [7]" << endl;
+    cout << "Выберите нужный шифр. \n\nШифр Цезаря+ [1]\nЛозунговый шифр [2]\nПолибианский квадрат+ [3]\nШифрующая система Трисемуса [4]\nШифра Playfair [5]\nСистема омофонов+ [6]\nШифр Виженера+ [7]" << endl;
     cin >> ans;
 
     switch (ans)
@@ -354,9 +448,9 @@ int main()
     case 2: codeLozungMain(); break;
     case 3: polebBoxMain(); break;
     case 4: codeTrisimusMain(); break;
-    case 5: codeTrisimusMain(); break;
-    case 6: codeTrisimusMain(); break;
-    case 7: codeTrisimusMain(); break;
+    case 5: codePlayfairMain(); break;
+    case 6: codeOmofonMain(); break;
+    case 7: codeVishenerMain(); break;
     default: break;
     }
 
