@@ -156,12 +156,15 @@ void polebBox()
     cin.ignore();
     string text;
     getline(cin, text);
-
+    /*Создал таблицу 6х6*/
     unsigned char box[6][6];
+    /*Преообразовал каждый символ сообщения в unsigned char*/
     list<unsigned char> message = getUnsignedCharList(text);
+    /*Зашифрованное сообщение*/
     string res;
-
+    /*Переменная хранит аски код буквы "А"*/
     int charCode = 192;
+    /*Цикл заполняет таблицу 6х6 буквами русского алфавита*/
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 6; j++)
@@ -177,7 +180,7 @@ void polebBox()
             charCode++;
         }
     }
-
+    /*Цикл ище для каждого символа сообщения позицию строки и столбца, которые являются символом шифра*/
     for (auto& l : message)
     {
         bool flag = false;
@@ -192,13 +195,144 @@ void polebBox()
                 }
             }
         }
+        /*Проверка, прошёл ли символ шифрофку*/
         if (flag == false)
         {
             res += l;
             res += " ";
         }
     }
+    /*Вывод зашифрованного сообщения*/
+    cout << res;
+}
 
+void polebBoxMain()
+{
+    cout << "Введите сообщение:" << endl;
+    cin.ignore();
+    string text;
+    getline(cin, text);
+    /*Создал таблицу 6х6*/
+    unsigned char box[6][6];
+    /*Преообразовал каждый символ сообщения в unsigned char*/
+    list<unsigned char> message = getUnsignedCharList(text);
+    /*Зашифрованное сообщение*/
+    string res;
+    /*Переменная хранит аски код буквы "А"*/
+    int charCode = 192;
+    /*Цикл заполняет таблицу 6х6 буквами русского алфавита*/
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            if (charCode < 224)
+            {
+                box[i][j] = charCode;
+            }
+            else
+            {
+                box[i][j] = 0;
+            }
+            charCode++;
+        }
+    }
+    /*Цикл ище для каждого символа сообщения позицию строки и столбца, которые являются символом шифра*/
+    for (auto& l : message)
+    {
+        bool flag = false;
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                if (l == box[i][j])
+                {
+                    res += to_string(i + 1) + to_string(j + 1) + " ";
+                    flag = true;
+                }
+            }
+        }
+        /*Проверка, прошёл ли символ шифрофку*/
+        if (flag == false)
+        {
+            res += l;
+            res += " ";
+        }
+    }
+    /*Вывод зашифрованного сообщения*/
+    cout << res;
+}
+
+void codeTrisimusMain()
+{
+    cout << "Не работает!" << endl;
+}
+
+void codePlayfairMain()
+{
+    cout << "Не работает!" << endl;
+}
+
+void codeOmofonMain()
+{
+    cout << "Введите сообщение:" << endl;
+    cin.ignore();
+    string text;
+    getline(cin, text);
+    /*Создал таблицу 6х6*/
+    unsigned char box[31][3];
+    /*Преообразовал каждый символ сообщения в unsigned char*/
+    list<unsigned char> message = getUnsignedCharList(text);
+    /*Зашифрованное сообщение*/
+    string res;
+    /*Переменная хранит аски код буквы "А"*/
+    int charCode = 192;
+    /*Цикл заполняет таблицу 6х6 буквами русского алфавита*/
+    for (int i = 0; i < 31; i++)
+    {
+        if (charCode < 224)
+        {
+            box[i][0] = charCode;
+        }
+        {
+            box[i][0] = 0;
+        }
+        for (int j = 1; j < 3; j++)
+        {
+            box[i][j] = charCode;
+            if (charCode < 224)
+            {
+                box[i][j] = charCode;
+            }
+            else
+            {
+                box[i][j] = 0;
+            }
+            charCode++;
+        }
+    }
+    /*Цикл ище для каждого символа сообщения позицию строки и столбца, которые являются символом шифра*/
+    for (auto& l : message)
+    {
+        bool flag = false;
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                if (l == box[i][j])
+                {
+                    res += to_string(i + 1) + to_string(j + 1) + " ";
+                    flag = true;
+                }
+            }
+        }
+        /*Проверка, прошёл ли символ шифрофку*/
+        if (flag == false)
+        {
+            res += l;
+            res += " ";
+        }
+    }
+    /*Вывод зашифрованного сообщения*/
     cout << res;
 }
 
@@ -211,14 +345,18 @@ int main()
 
     int ans;
 
-    cout << "Выберите нужный шифр. \n\nШифр Цезаря [1]\nЛозунговый шифр [2]\nПолибианский квадрат [3]" << endl;
+    cout << "Выберите нужный шифр. \n\nШифр Цезаря [1]\nЛозунговый шифр [2]\nПолибианский квадрат [3]\nШифрующая система Трисемуса [4]\nШифра Playfair [5]\nСистема омофонов [6]\nШифр Виженера [7]" << endl;
     cin >> ans;
 
     switch (ans)
     {
     case 1: codeChezarMain(); break;
     case 2: codeLozungMain(); break;
-    case 3: polebBox(); break;
+    case 3: polebBoxMain(); break;
+    case 4: codeTrisimusMain(); break;
+    case 5: codeTrisimusMain(); break;
+    case 6: codeTrisimusMain(); break;
+    case 7: codeTrisimusMain(); break;
     default: break;
     }
 
