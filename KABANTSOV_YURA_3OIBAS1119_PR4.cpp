@@ -203,7 +203,7 @@ void polebBox()
         }
     }
     /*Вывод зашифрованного сообщения*/
-    cout << res;
+    cout << "Зашифрованное сообщение:\n" << res;
 }
 
 void polebBoxMain()
@@ -268,7 +268,7 @@ void polebBoxMain()
         }
     }
     /*Вывод зашифрованного сообщения*/
-    cout << res;
+    cout << "Зашифрованное сообщение:\n" << res;
 }
 
 void codeTrisimusMain()
@@ -343,7 +343,7 @@ void codeOmofonMain()
         }
     }
     /*Вывод зашифрованного сообщения*/
-    cout << res;
+    cout << "Зашифрованное сообщение:\n" << res;
 }
 
 void codeVishenerMain()
@@ -378,7 +378,34 @@ void codeVishenerMain()
     {
         tableV[i][0] = static_cast<unsigned char>(key[i - 1]);
     }
-    /**/
+    /*Заполнение таблицы*/
+    for (int i = 1; i < key.size() + 1; i++)
+    {
+        charCode = tableV[i][0] + 1;
+        for (int j = 1; j < 33; j++)
+        {
+            if (charCode > 223)
+            {
+                charCode = 192;
+            }
+            tableV[i][j] = charCode;
+            charCode++;
+        }
+    }
+    int i = 0;
+    int newRange = message.size() - parol.size();
+    auto j = parol.begin();
+    while (i < newRange)
+    {
+        if (j == parol.end())
+        {
+            j = parol.begin();
+        }
+        parol.push_back(*j);
+        advance(j, 1);
+        i++;
+    }
+    /*Вывод таблицы*/
     for (int i = 0; i < key.size() + 1; i++)
     {
         for (int j = 0; j < 33; j++)
@@ -387,47 +414,48 @@ void codeVishenerMain()
         }
         cout << endl;
     }
-
-    ///*Цикл заполняет таблицу омофонами*/
-    //for (int i = 0; i < 31; i++)
-    //{
-    //    for (int j = 0; j < 2; j++)
-    //    {
-    //        omofonABC[i][j] = rand() % 200 + 100;
-    //    }
-    //    charCode++;
-    //}
-    ///*Цикл выводит список букв русского алфавита и соответствующие им строки таблицы с омофонами*/
-    //for (int i = 0; i < 31; i++)
-    //{
-    //    cout << static_cast<unsigned char>(ABC[i]) << " ";
-    //    for (int j = 0; j < 2; j++)
-    //    {
-    //        cout << omofonABC[i][j] << " ";
-    //    }
-    //    cout << endl;
-    //}
-    ///*Цикл ищет в списке шифруемый символ и подбирает случайный омофон*/
-    //for (auto& l : message)
-    //{
-    //    bool flag = false;
-    //    for (int i = 0; i < 31; i++)
-    //    {
-    //        if (l == ABC[i])
-    //        {
-    //            flag = true;
-    //            res += to_string(omofonABC[i][rand() % 2 + 0]) + " ";
-    //        }
-    //    }
-    //    /*Проверка, прошёл ли символ шифрофку*/
-    //    if (flag == false)
-    //    {
-    //        res += l;
-    //        res += " ";
-    //    }
-    //}
-    ///*Вывод зашифрованного сообщения*/
-    //cout << res;
+    /*Вывод сообщения и пароля*/
+    cout << endl;
+    for (auto& i : message)
+    {
+        cout << i;
+    }
+    cout << endl;
+    for (auto& i : parol)
+    {
+        cout << i;
+    }
+    /**/
+    i = 0;
+    auto mI = message.begin();
+    auto pI = parol.begin();
+    while (i < message.size())
+    {
+        for (int j = 1; j < 33; j++)
+        {
+            if (*mI == tableV[0][j])
+            {
+                for (int l = 1; l < key.size() + 1; l++)
+                {
+                    if (*pI == tableV[l][0])
+                    {
+                        res += tableV[l][j];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if (*mI < 192 || *mI > 223)
+        {
+            res += static_cast<unsigned char>(*mI);
+        }
+        advance(mI, 1);
+        advance(pI, 1);
+        i++;
+    }
+    cout << endl << endl;
+    cout << "Зашифрованное сообщение:\n" << res;
 }
 
 int main()
